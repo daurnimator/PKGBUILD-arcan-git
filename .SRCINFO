@@ -1,0 +1,64 @@
+pkgbase = arcan-git
+	pkgdesc = Game Engine meets a Display Server meets a Multimedia Framework
+	pkgver = 0.5.5.r21.g483e5681
+	pkgrel = 1
+	url = https://arcan-fe.com
+	arch = x86_64
+	license = GPL
+	license = LGPL
+	license = BSD
+	makedepends = git
+	makedepends = cmake
+	makedepends = fuse3
+	makedepends = libvncserver
+	makedepends = lua51
+	makedepends = ruby
+	makedepends = wayland
+	source = git+https://github.com/letoram/arcan
+	sha256sums = SKIP
+
+pkgname = arcan-git
+	depends = apr
+	depends = harfbuzz-icu
+	depends = libvncserver
+	depends = lua51
+	depends = openal
+	depends = vlc
+
+pkgname = arcan-acfgfs-git
+	pkgdesc = Arcan virtual filesystem for working with the format that durden (and others) provide over a domain socket
+	depends = fuse3
+
+pkgname = arcan-aclip-git
+	pkgdesc = Arcan clipboard integration, similarly to how "xclip" works for Xorg
+	depends = arcan-git
+
+pkgname = arcan-aloadimage-git
+	pkgdesc = Arcan sandboxed image loader, supporting multi-process privilege separation, playlists and so on - similar to xloadimage
+	depends = arcan-git
+
+pkgname = arcan-leddec-git
+	pkgdesc = A simple skeleton that can be used for interfacing with custom LED controllers using Arcan
+	depends = arcan-git
+
+pkgname = arcan-ltui-git
+	pkgdesc = A patched version of the Lua interactive CLI that loads in the shmif-tui (text-user interfaces)
+	depends = arcan-git
+
+pkgname = arcan-net-git
+	pkgdesc = A development sandbox for the arcan-net bridge used to link single clients over a network
+	depends = arcan-git
+
+pkgname = arcan-shmmon-git
+	pkgdesc = Simple shmif- debugging aid for Arcan
+	depends = arcan-git
+
+pkgname = arcan-waybridge-git
+	pkgdesc = Bridges wayland connections with an arcan connection point
+	depends = arcan-git
+	depends = wayland
+
+pkgname = arcan-vrbridge-git
+	pkgdesc = Aggregates samples from VR related SDKs and binds into a single avatar in a way that integrates with the core engine VR path
+	depends = arcan-git
+
