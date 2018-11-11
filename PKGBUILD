@@ -83,6 +83,8 @@ package_arcan-git() {
            'lua51'
            'openal'
            'vlc')
+  provides=('arcan')
+  conflicts=('arcan')
 
   cd arcan
 
@@ -93,6 +95,8 @@ package_arcan-git() {
 package_arcan-acfgfs-git() {
   pkgdesc='Arcan virtual filesystem for working with the format that durden (and others) provide over a domain socket'
   depends=('fuse3')
+  provides=('arcan-acfgfs')
+  conflicts=('arcan-acfgfs')
 
   cd arcan
 
@@ -102,6 +106,8 @@ package_arcan-acfgfs-git() {
 package_arcan-aclip-git() {
   pkgdesc='Arcan clipboard integration, similarly to how "xclip" works for Xorg'
   depends=('arcan-git')
+  provides=('arcan-aclip')
+  conflicts=('arcan-aclip')
 
   cd arcan
 
@@ -111,6 +117,8 @@ package_arcan-aclip-git() {
 package_arcan-aloadimage-git() {
   pkgdesc='Arcan sandboxed image loader, supporting multi-process privilege separation, playlists and so on - similar to xloadimage'
   depends=('arcan-git')
+  provides=('arcan-aloadimage')
+  conflicts=('arcan-aloadimage')
 
   cd arcan
 
@@ -120,6 +128,8 @@ package_arcan-aloadimage-git() {
 package_arcan-net-git() {
   pkgdesc='A development sandbox for the arcan-net bridge used to link single clients over a network'
   depends=('arcan-git')
+  provides=('arcan-net')
+  conflicts=('arcan-net')
 
   cd arcan
 
@@ -129,6 +139,8 @@ package_arcan-net-git() {
 package_arcan-shmmon-git() {
   pkgdesc='Simple shmif- debugging aid for Arcan'
   depends=('arcan-git')
+  provides=('arcan-shmmon')
+  conflicts=('arcan-shmmon')
 
   cd arcan
 
@@ -138,6 +150,8 @@ package_arcan-shmmon-git() {
 package_arcan-vrbridge-git() {
   pkgdesc='Aggregates samples from VR related SDKs and binds into a single avatar in a way that integrates with the core engine VR path'
   depends=('arcan-git')
+  provides=('arcan-vrbridge')
+  conflicts=('arcan-vrbridge')
 
   cd arcan
 
@@ -147,6 +161,8 @@ package_arcan-vrbridge-git() {
 package_arcan-waybridge-git() {
   pkgdesc='Bridges wayland connections with an arcan connection point'
   depends=('arcan-git' 'wayland')
+  provides=('arcan-waybridge')
+  conflicts=('arcan-waybridge')
 
   cd arcan
 
@@ -156,6 +172,8 @@ package_arcan-waybridge-git() {
 package_arcan-leddec-git() {
   pkgdesc='A simple skeleton that can be used for interfacing with custom LED controllers using Arcan'
   depends=('arcan-git')
+  provides=('arcan-leddec')
+  conflicts=('arcan-leddec')
 
   cd arcan
 
@@ -165,6 +183,8 @@ package_arcan-leddec-git() {
 package_arcan-ltui-git() {
   pkgdesc='A patched version of the Lua interactive CLI that loads in the shmif-tui (text-user interfaces)'
   depends=('arcan-git')
+  provides=('arcan-ltui')
+  conflicts=('arcan-ltui')
 
   cd arcan
 
