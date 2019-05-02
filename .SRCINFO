@@ -1,20 +1,20 @@
 pkgbase = arcan-git
 	pkgdesc = Game Engine meets a Display Server meets a Multimedia Framework
-	pkgver = 0.5.5.r21.g483e5681
+	pkgver = 0.5.5.r171.geeab5d18
 	pkgrel = 1
 	url = https://arcan-fe.com
 	arch = x86_64
 	license = GPL
 	license = LGPL
 	license = BSD
-	makedepends = git
 	makedepends = cmake
+	makedepends = git
 	makedepends = fuse3
 	makedepends = libvncserver
 	makedepends = lua51
 	makedepends = ruby
 	makedepends = wayland
-	source = git+https://github.com/letoram/arcan
+	source = arcan-git::git+https://github.com/letoram/arcan.git
 	sha256sums = SKIP
 
 pkgname = arcan-git
@@ -58,7 +58,7 @@ pkgname = arcan-ltui-git
 	conflicts = arcan-ltui
 
 pkgname = arcan-net-git
-	pkgdesc = A development sandbox for the arcan-net bridge used to link single clients over a network
+	pkgdesc = Arcan per client net proxying for shmif- based clients
 	depends = arcan-git
 	provides = arcan-net
 	conflicts = arcan-net

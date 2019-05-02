@@ -4,6 +4,7 @@
 ## Known issue: cmake uses absolute paths which result in binaries containing
 ## build root via __FILE__ macro
 
+pkgbase='arcan-git'
 pkgname=('arcan-git'
          'arcan-acfgfs-git'
          'arcan-aclip-git'
@@ -14,34 +15,33 @@ pkgname=('arcan-git'
          'arcan-shmmon-git'
          'arcan-waybridge-git'
          'arcan-vrbridge-git')
-pkgver=0.5.5.r21.g483e5681
+pkgver=0.5.5.r171.geeab5d18
 pkgrel=1
 pkgdesc='Game Engine meets a Display Server meets a Multimedia Framework'
 arch=('x86_64')
 url='https://arcan-fe.com'
 license=('GPL' 'LGPL' 'BSD')
-makedepends=('git'
-             'cmake'
+makedepends=('cmake'
+             'git'
              'fuse3'
              'libvncserver'
-             'lua51'
-             # TODO: vrbridge wants openhmd
+             'lua51' # Doesn't compile against LuaJIT 2.1 due to deprecated ref API usage
              'ruby'
              'wayland')
-source=(git+https://github.com/letoram/arcan)
+source=("${pkgbase}::git+https://github.com/letoram/arcan.git")
 sha256sums=('SKIP')
 
-pkgver() {
-  cd arcan
-
-  ( set -o pipefail
+pkgver () {
+  cd "${pkgbase}"
+  (
+    set -o pipefail
     git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
     printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
   )
 }
 
 build() {
-  cd arcan
+  cd "${pkgbase}"
 
   # Build docs
   ## Needs to happen before cmake runs
@@ -62,17 +62,18 @@ build() {
 
   # Build misc utils
   for tool in acfgfs aclip aloadimage leddec ltui netproxy shmmon vrbridge waybridge; do
-    env -C "src/tools/$tool" \
-      cmake --no-warn-unused-cli \
+    mkdir -p "build-$tool"
+    env -C "build-$tool" cmake \
       -DCMAKE_INSTALL_PREFIX=/usr \
-      -DARCAN_SHMIF_INCLUDE_DIR=../../shmif \
-      -DARCAN_SHMIF_LIBRARY=../../../build/shmif/libarcan_shmif.so \
-      -DARCAN_SHMIF_SERVER_LIBRARY=../../../build/shmif/libarcan_shmif_server.so \
-      -DARCAN_SHMIF_EXT_INCLUDE_DIR=../../shmif \
-      -DARCAN_SHMIF_EXT_LIBRARY=../../../build/shmif/libarcan_shmif_ext.so \
-      -DARCAN_TUI_INCLUDE_DIR=../../shmif \
-      -DARCAN_TUI_LIBRARY=../../../build/shmif/libarcan_tui.so
-    make -C "src/tools/$tool"
+      --no-warn-unused-cli \
+      -DARCAN_SHMIF_INCLUDE_DIR=../src/shmif \
+      -DARCAN_SHMIF_LIBRARY=../build/shmif/libarcan_shmif.so \
+      -DARCAN_SHMIF_SERVER_LIBRARY=../build/shmif/libarcan_shmif_server.so \
+      -DARCAN_SHMIF_EXT_LIBRARY=../build/shmif/libarcan_shmif_ext.so \
+      -DARCAN_TUI_INCLUDE_DIR=../src/shmif \
+      -DARCAN_TUI_LIBRARY=../build/shmif/libarcan_tui.so \
+      "../src/tools/$tool"
+    make -C "build-$tool"
   done
 }
 
@@ -86,7 +87,7 @@ package_arcan-git() {
   provides=('arcan')
   conflicts=('arcan')
 
-  cd arcan
+  cd "${pkgbase}"
 
   make -C build DESTDIR="$pkgdir" install
   install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
@@ -98,9 +99,9 @@ package_arcan-acfgfs-git() {
   provides=('arcan-acfgfs')
   conflicts=('arcan-acfgfs')
 
-  cd arcan
+  cd "${pkgbase}"
 
-  make -C src/tools/acfgfs DESTDIR="$pkgdir" install
+  make -C build-acfgfs DESTDIR="$pkgdir" install
 }
 
 package_arcan-aclip-git() {
@@ -109,9 +110,9 @@ package_arcan-aclip-git() {
   provides=('arcan-aclip')
   conflicts=('arcan-aclip')
 
-  cd arcan
+  cd "${pkgbase}"
 
-  make -C src/tools/aclip DESTDIR="$pkgdir" install
+  make -C build-aclip DESTDIR="$pkgdir" install
 }
 
 package_arcan-aloadimage-git() {
@@ -120,20 +121,20 @@ package_arcan-aloadimage-git() {
   provides=('arcan-aloadimage')
   conflicts=('arcan-aloadimage')
 
-  cd arcan
+  cd "${pkgbase}"
 
-  make -C src/tools/aloadimage DESTDIR="$pkgdir" install
+  make -C build-aloadimage DESTDIR="$pkgdir" install
 }
 
 package_arcan-net-git() {
-  pkgdesc='A development sandbox for the arcan-net bridge used to link single clients over a network'
+  pkgdesc='Arcan per client net proxying for shmif- based clients'
   depends=('arcan-git')
   provides=('arcan-net')
   conflicts=('arcan-net')
 
-  cd arcan
+  cd "${pkgbase}"
 
-  make -C src/tools/netproxy DESTDIR="$pkgdir" install
+  make -C build-netproxy DESTDIR="$pkgdir" install
 }
 
 package_arcan-shmmon-git() {
@@ -142,9 +143,9 @@ package_arcan-shmmon-git() {
   provides=('arcan-shmmon')
   conflicts=('arcan-shmmon')
 
-  cd arcan
+  cd "${pkgbase}"
 
-  make -C src/tools/shmmon DESTDIR="$pkgdir" install
+  make -C build-shmmon DESTDIR="$pkgdir" install
 }
 
 package_arcan-vrbridge-git() {
@@ -153,9 +154,9 @@ package_arcan-vrbridge-git() {
   provides=('arcan-vrbridge')
   conflicts=('arcan-vrbridge')
 
-  cd arcan
+  cd "${pkgbase}"
 
-  make -C src/tools/vrbridge DESTDIR="$pkgdir" install
+  make -C build-vrbridge DESTDIR="$pkgdir" install
 }
 
 package_arcan-waybridge-git() {
@@ -164,9 +165,9 @@ package_arcan-waybridge-git() {
   provides=('arcan-waybridge')
   conflicts=('arcan-waybridge')
 
-  cd arcan
+  cd "${pkgbase}"
 
-  make -C src/tools/waybridge DESTDIR="$pkgdir" install
+  make -C build-waybridge DESTDIR="$pkgdir" install
 }
 
 package_arcan-leddec-git() {
@@ -175,9 +176,9 @@ package_arcan-leddec-git() {
   provides=('arcan-leddec')
   conflicts=('arcan-leddec')
 
-  cd arcan
+  cd "${pkgbase}"
 
-  make -C src/tools/leddec DESTDIR="$pkgdir" install
+  make -C build-leddec DESTDIR="$pkgdir" install
 }
 
 package_arcan-ltui-git() {
@@ -186,8 +187,7 @@ package_arcan-ltui-git() {
   provides=('arcan-ltui')
   conflicts=('arcan-ltui')
 
-  cd arcan
+  cd "${pkgbase}"
 
-  make -C src/tools/ltui DESTDIR="$pkgdir" install
-  install -Dm755 doc/lua-tui.md "$pkgdir/usr/share/doc/arcan-ltui/lua-tui.md"
+  make -C build-ltui DESTDIR="$pkgdir" install
 }
