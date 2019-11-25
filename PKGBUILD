@@ -8,14 +8,13 @@ pkgbase='arcan-git'
 pkgname=('arcan-git'
          'arcan-acfgfs-git'
          'arcan-aclip-git'
+         'arcan-adbginject-git'
          'arcan-aloadimage-git'
-         'arcan-leddec-git'
-         'arcan-ltui-git'
-         'arcan-net-git'
          'arcan-shmmon-git'
-         'arcan-waybridge-git'
-         'arcan-vrbridge-git')
-pkgver=0.5.5.r171.geeab5d18
+         'arcan-trayicon-git'
+         'arcan-vrbridge-git'
+         'arcan-waybridge-git')
+pkgver=0.5.5.r333.ge37928dd
 pkgrel=1
 pkgdesc='Game Engine meets a Display Server meets a Multimedia Framework'
 arch=('x86_64')
@@ -25,7 +24,9 @@ makedepends=('cmake'
              'git'
              'fuse3'
              'libvncserver'
-             'lua51' # Doesn't compile against LuaJIT 2.1 due to deprecated ref API usage
+             'lua51'
+             'meson'
+             # TODO: vrbridge wants openhmd
              'ruby'
              'wayland')
 source=("${pkgbase}::git+https://github.com/letoram/arcan.git")
@@ -61,7 +62,7 @@ build() {
   make -C build
 
   # Build misc utils
-  for tool in acfgfs aclip aloadimage leddec ltui netproxy shmmon vrbridge waybridge; do
+  for tool in acfgfs aclip aloadimage shmmon vrbridge waybridge; do
     mkdir -p "build-$tool"
     env -C "build-$tool" cmake \
       -DCMAKE_INSTALL_PREFIX=/usr \
@@ -74,6 +75,11 @@ build() {
       -DARCAN_TUI_LIBRARY=../build/shmif/libarcan_tui.so \
       "../src/tools/$tool"
     make -C "build-$tool"
+  done
+
+  for tool in adbginject trayicon; do
+    meson --prefix=/usr --buildtype=plain "src/tools/$tool" "build-$tool"
+    ninja -C "build-$tool"
   done
 }
 
@@ -126,17 +132,6 @@ package_arcan-aloadimage-git() {
   make -C build-aloadimage DESTDIR="$pkgdir" install
 }
 
-package_arcan-net-git() {
-  pkgdesc='Arcan per client net proxying for shmif- based clients'
-  depends=('arcan-git')
-  provides=('arcan-net')
-  conflicts=('arcan-net')
-
-  cd "${pkgbase}"
-
-  make -C build-netproxy DESTDIR="$pkgdir" install
-}
-
 package_arcan-shmmon-git() {
   pkgdesc='Simple shmif- debugging aid for Arcan'
   depends=('arcan-git')
@@ -170,24 +165,24 @@ package_arcan-waybridge-git() {
   make -C build-waybridge DESTDIR="$pkgdir" install
 }
 
-package_arcan-leddec-git() {
-  pkgdesc='A simple skeleton that can be used for interfacing with custom LED controllers using Arcan'
+package_arcan-adbginject-git() {
+  pkgdesc='A trivial dynamic interposition library for providing some arcan UI interfacing'
   depends=('arcan-git')
-  provides=('arcan-leddec')
-  conflicts=('arcan-leddec')
+  provides=('arcan-adbginject')
+  conflicts=('arcan-adbginject')
 
   cd "${pkgbase}"
 
-  make -C build-leddec DESTDIR="$pkgdir" install
+  env DESTDIR="$pkgdir" ninja -C build-adbginject install
 }
 
-package_arcan-ltui-git() {
-  pkgdesc='A patched version of the Lua interactive CLI that loads in the shmif-tui (text-user interfaces)'
+package_arcan-trayicon-git() {
+  pkgdesc='A simple tool that connects to arcan as an ICON'
   depends=('arcan-git')
-  provides=('arcan-ltui')
-  conflicts=('arcan-ltui')
+  provides=('arcan-trayicon')
+  conflicts=('arcan-trayicon')
 
   cd "${pkgbase}"
 
-  make -C build-ltui DESTDIR="$pkgdir" install
+  env DESTDIR="$pkgdir" ninja -C build-trayicon install
 }

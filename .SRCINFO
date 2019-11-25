@@ -1,6 +1,6 @@
 pkgbase = arcan-git
 	pkgdesc = Game Engine meets a Display Server meets a Multimedia Framework
-	pkgver = 0.5.5.r171.geeab5d18
+	pkgver = 0.5.5.r333.ge37928dd
 	pkgrel = 1
 	url = https://arcan-fe.com
 	arch = x86_64
@@ -12,6 +12,7 @@ pkgbase = arcan-git
 	makedepends = fuse3
 	makedepends = libvncserver
 	makedepends = lua51
+	makedepends = meson
 	makedepends = ruby
 	makedepends = wayland
 	source = arcan-git::git+https://github.com/letoram/arcan.git
@@ -39,29 +40,17 @@ pkgname = arcan-aclip-git
 	provides = arcan-aclip
 	conflicts = arcan-aclip
 
+pkgname = arcan-adbginject-git
+	pkgdesc = A trivial dynamic interposition library for providing some arcan UI interfacing
+	depends = arcan-git
+	provides = arcan-adbginject
+	conflicts = arcan-adbginject
+
 pkgname = arcan-aloadimage-git
 	pkgdesc = Arcan sandboxed image loader, supporting multi-process privilege separation, playlists and so on - similar to xloadimage
 	depends = arcan-git
 	provides = arcan-aloadimage
 	conflicts = arcan-aloadimage
-
-pkgname = arcan-leddec-git
-	pkgdesc = A simple skeleton that can be used for interfacing with custom LED controllers using Arcan
-	depends = arcan-git
-	provides = arcan-leddec
-	conflicts = arcan-leddec
-
-pkgname = arcan-ltui-git
-	pkgdesc = A patched version of the Lua interactive CLI that loads in the shmif-tui (text-user interfaces)
-	depends = arcan-git
-	provides = arcan-ltui
-	conflicts = arcan-ltui
-
-pkgname = arcan-net-git
-	pkgdesc = Arcan per client net proxying for shmif- based clients
-	depends = arcan-git
-	provides = arcan-net
-	conflicts = arcan-net
 
 pkgname = arcan-shmmon-git
 	pkgdesc = Simple shmif- debugging aid for Arcan
@@ -69,16 +58,22 @@ pkgname = arcan-shmmon-git
 	provides = arcan-shmmon
 	conflicts = arcan-shmmon
 
-pkgname = arcan-waybridge-git
-	pkgdesc = Bridges wayland connections with an arcan connection point
+pkgname = arcan-trayicon-git
+	pkgdesc = A simple tool that connects to arcan as an ICON
 	depends = arcan-git
-	depends = wayland
-	provides = arcan-waybridge
-	conflicts = arcan-waybridge
+	provides = arcan-trayicon
+	conflicts = arcan-trayicon
 
 pkgname = arcan-vrbridge-git
 	pkgdesc = Aggregates samples from VR related SDKs and binds into a single avatar in a way that integrates with the core engine VR path
 	depends = arcan-git
 	provides = arcan-vrbridge
 	conflicts = arcan-vrbridge
+
+pkgname = arcan-waybridge-git
+	pkgdesc = Bridges wayland connections with an arcan connection point
+	depends = arcan-git
+	depends = wayland
+	provides = arcan-waybridge
+	conflicts = arcan-waybridge
 
